@@ -1,7 +1,11 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
+import { Link } from "expo-router";
+import { useTheme } from "./context/ThemeContext";
 
 const Home = () => {
+  const { color, isDarkMode } = useTheme();
+  
   const skills = [
     { name: 'Python', color: '#3776ab', icon: '🐍' },
     { name: 'HTML', color: '#e34f26', icon: '🌐' },
@@ -14,43 +18,44 @@ const Home = () => {
   ];
 
   const stats = [
-    { title: 'Projects', value: '15', subtitle: 'Completed' },
-    { title: 'Experience', value: '2+', subtitle: 'mounth' },
+    { title: 'Projects', value: '12', subtitle: 'Completed' },
+    { title: 'Experience', value: '3+', subtitle: 'Mounth' },
     { title: 'Skills', value: '8+', subtitle: 'Technologies' },
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: color.background }]}>
       <LinearGradient
-        colors={['#1a1a2e', '#16213e', '#0f3460']}
+        colors={[color.gradientStart, color.gradientMiddle, color.gradientEnd]}
         style={styles.backgroundGradient}
       >
         {/* Header Section */}
         <View style={styles.header}>
           <View style={styles.profileSection}>
             {/* Animated rings around profile */}
-            <View style={styles.outerRing}>
-              <View style={styles.innerRing}>
+            <View style={[styles.outerRing, { borderColor: color.accent, shadowColor: color.accent }]}>
+              <View style={[styles.innerRing, { borderColor: color.primary }]}>
                 <Image
                   source={require("../assets/image/me.jpg")} 
-                  style={styles.profileImage}
+                  style={[styles.profileImage, { borderColor: color.background }]}
                 />
               </View>
             </View>
             
-            <Text style={styles.name}>Natithorn Srimee</Text>
-            <Text style={styles.studentId}>653450292-4</Text>
-            <Text style={styles.major}>Computer and Information Science</Text>
-            <Text style={styles.university}>Khon Kaen University</Text>
+            <Text style={[styles.name, { color: color.text }]}>Natithorn Srimee</Text>
+            <Text style={[styles.studentId, { color: color.accent }]}>653450292-4</Text>
+            <Text style={[styles.major, { color: color.primary }]}>Computer and Information Science</Text>
+            <Text style={[styles.university, { color: color.textSecondary }]}>Khon Kaen University</Text>
+            <Text style={[styles.course, { color: color.info }]}>IN405109 - Hybrid Mobile App Development</Text>
           </View>
 
           {/* Stats Section */}
           <View style={styles.statsContainer}>
             {stats.map((stat, index) => (
-              <View key={index} style={styles.statItem}>
-                <Text style={styles.statValue}>{stat.value}</Text>
-                <Text style={styles.statTitle}>{stat.title}</Text>
-                <Text style={styles.statSubtitle}>{stat.subtitle}</Text>
+              <View key={index} style={[styles.statItem, { backgroundColor: color.skillBackground, borderColor: color.skillBorder }]}>
+                <Text style={[styles.statValue, { color: color.text }]}>{stat.value}</Text>
+                <Text style={[styles.statTitle, { color: color.primary }]}>{stat.title}</Text>
+                <Text style={[styles.statSubtitle, { color: color.textSecondary }]}>{stat.subtitle}</Text>
               </View>
             ))}
           </View>
@@ -58,16 +63,16 @@ const Home = () => {
 
         {/* Skills Section */}
         <View style={styles.skillsSection}>
-          <Text style={styles.sectionTitle}>My Skills</Text>
+          <Text style={[styles.sectionTitle, { color: color.text }]}>My Skills</Text>
           <View style={styles.skillsGrid}>
             {skills.map((skill, index) => (
               <TouchableOpacity key={index} style={styles.skillCard}>
                 <LinearGradient
                   colors={[skill.color + '20', skill.color + '10']}
-                  style={styles.skillGradient}
+                  style={[styles.skillGradient, { borderColor: color.skillBorder }]}
                 >
                   <Text style={styles.skillIcon}>{skill.icon}</Text>
-                  <Text style={styles.skillName}>{skill.name}</Text>
+                  <Text style={[styles.skillName, { color: color.text }]}>{skill.name}</Text>
                 </LinearGradient>
               </TouchableOpacity>
             ))}
@@ -76,13 +81,20 @@ const Home = () => {
 
         {/* Bottom Decorative Elements */}
         <View style={styles.decorativeElements}>
-          <View style={[styles.floatingDot, { top: 100, left: 50 }]} />
-          <View style={[styles.floatingDot, { top: 200, right: 60 }]} />
-          <View style={[styles.floatingDot, { top: 350, left: 30 }]} />
-          <View style={[styles.floatingDot, { top: 450, right: 40 }]} />
-          <View style={[styles.floatingDot, { bottom: 200, left: 70 }]} />
-          <View style={[styles.floatingDot, { bottom: 100, right: 80 }]} />
+          <View style={[styles.floatingDot, { top: 100, left: 50, backgroundColor: color.accent }]} />
+          <View style={[styles.floatingDot, { top: 200, right: 60, backgroundColor: color.primary }]} />
+          <View style={[styles.floatingDot, { top: 350, left: 30, backgroundColor: color.secondary }]} />
+          <View style={[styles.floatingDot, { top: 450, right: 40, backgroundColor: color.accent }]} />
+          <View style={[styles.floatingDot, { bottom: 200, left: 70, backgroundColor: color.primary }]} />
+          <View style={[styles.floatingDot, { bottom: 100, right: 80, backgroundColor: color.secondary }]} />
         </View>
+        
+        {/* Navigation Link */}
+        <Link href={"/about"} style={{ marginTop: 30, alignSelf: 'center' }}>
+          <View style={[styles.linkButton, { backgroundColor: color.buttonPrimary, borderColor: color.border }]}>
+            <Text style={[styles.linkText, { color: color.buttonText }]}>About Us →</Text>
+          </View>
+        </Link>
       </LinearGradient>
     </ScrollView>
   );
@@ -91,9 +103,15 @@ const Home = () => {
 export default Home; 
 
 const styles = StyleSheet.create({
+  button: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#007BFF",
+    borderRadius: 5,
+    color: "#fff",
+  },
   container: {
     flex: 1,
-    backgroundColor: '#1a1a2e',
   },
   backgroundGradient: {
     flex: 1,
@@ -115,11 +133,9 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 100,
     borderWidth: 3,
-    borderColor: '#e91e63',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    shadowColor: '#e91e63',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,
     shadowRadius: 10,
@@ -130,7 +146,6 @@ const styles = StyleSheet.create({
     height: 170,
     borderRadius: 85,
     borderWidth: 3,
-    borderColor: '#9c27b0',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -139,32 +154,33 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
     borderWidth: 3,
-    borderColor: '#ffffff',
   },
   name: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#ffffff',
     marginBottom: 5,
     textAlign: 'center',
   },
   studentId: {
     fontSize: 18,
-    color: '#e91e63',
     fontWeight: '600',
     marginBottom: 8,
   },
   major: {
     fontSize: 16,
-    color: '#bb86fc',
     fontWeight: '500',
     marginBottom: 4,
     textAlign: 'center',
   },
   university: {
     fontSize: 16,
-    color: '#8e8e93',
     textAlign: 'center',
+    marginBottom: 6,
+  },
+  course: {
+    fontSize: 14,
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
   statsContainer: {
     flexDirection: 'row',
@@ -175,22 +191,24 @@ const styles = StyleSheet.create({
   statItem: {
     alignItems: 'center',
     flex: 1,
+    marginHorizontal: 5,
+    paddingVertical: 15,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+    borderWidth: 1,
   },
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#ffffff',
     marginBottom: 4,
   },
   statTitle: {
     fontSize: 14,
-    color: '#bb86fc',
     fontWeight: '600',
     marginBottom: 2,
   },
   statSubtitle: {
     fontSize: 12,
-    color: '#8e8e93',
   },
   skillsSection: {
     marginTop: 20,
@@ -198,7 +216,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#ffffff',
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -219,7 +236,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   skillIcon: {
     fontSize: 30,
@@ -228,7 +244,6 @@ const styles = StyleSheet.create({
   skillName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff',
     textAlign: 'center',
   },
   decorativeElements: {
@@ -244,7 +259,22 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#e91e63',
     opacity: 0.6,
+  },
+  linkButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 25,
+    borderWidth: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  linkText: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });
