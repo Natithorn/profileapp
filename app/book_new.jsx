@@ -17,7 +17,7 @@ const BookNew = () => {
       return;
     }
     try {
-      const response = await fetch("http://10.0.15.34:3000/api/books", {
+      const response = await fetch("http://localhost:3000/api/books", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
