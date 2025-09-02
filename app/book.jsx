@@ -16,7 +16,7 @@ const Book = () => {
 
   const fetchBooks = () => {
     setRefreshing(true);
-    fetch("http://10.0.15.34:3000/api/books?page=1&limit=10")
+    fetch("http://localhost:3000/api/books?page=1&limit=10")
       .then((response) => response.json())
       .then((data) => {
         setData(data.books);
