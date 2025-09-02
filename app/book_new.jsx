@@ -32,7 +32,7 @@ const BookNew = () => {
       });
       if (response.ok) {
         Alert.alert("เพิ่มหนังสือสำเร็จ");
-        router.replace("/book");
+        router.replace("/book?refresh=1");
       } else {
         Alert.alert("เกิดข้อผิดพลาดในการเพิ่มหนังสือ");
       }

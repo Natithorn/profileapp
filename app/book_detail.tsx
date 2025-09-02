@@ -27,12 +27,16 @@ const BookDetail = () => {
       const response = await fetch(`http://10.0.15.34:3000/api/books/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(book),
+        body: JSON.stringify({
+          ...book,
+          year: book.year ? parseInt(book.year) : undefined,
+          price: book.price ? parseFloat(book.price) : undefined,
+        }),
       });
       if (response.ok) {
         Alert.alert("บันทึกสำเร็จ");
         setEditMode(false);
-        fetchBook();
+        router.replace("/book?refresh=1");
       } else {
         Alert.alert("เกิดข้อผิดพลาดในการบันทึก");
       }
@@ -48,7 +52,7 @@ const BookDetail = () => {
       });
       if (response.ok) {
         Alert.alert("ลบหนังสือสำเร็จ");
-        router.replace("/book");
+        router.replace("/book?refresh=1");
       } else {
         Alert.alert("เกิดข้อผิดพลาดในการลบ");
       }
