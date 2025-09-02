@@ -95,6 +95,21 @@ const Home = () => {
             <Text style={[styles.linkText, { color: color.buttonText }]}>About Us →</Text>
           </View>
         </Link>
+        <Link href={"/book"} style={{ marginTop: 30, alignSelf: 'center' }}>
+          <View style={[styles.linkButton, { backgroundColor: color.buttonPrimary, borderColor: color.border }]}>
+            <Text style={[styles.linkText, { color: color.buttonText }]}>Book →</Text>
+          </View>
+        </Link>
+        <Link href={"/signin"} style={{ marginTop: 30, alignSelf: 'center' }}>
+          <View style={[styles.linkButton, { backgroundColor: color.buttonPrimary, borderColor: color.border }]}>
+            <Text style={[styles.linkText, { color: color.buttonText }]}>signin →</Text>
+          </View>
+        </Link>
+        <Link href={"/signup"} style={{ marginTop: 30, alignSelf: 'center' }}>
+          <View style={[styles.linkButton, { backgroundColor: color.buttonPrimary, borderColor: color.border }]}>
+            <Text style={[styles.linkText, { color: color.buttonText }]}>signup →</Text>
+          </View>
+        </Link>
       </LinearGradient>
     </ScrollView>
   );

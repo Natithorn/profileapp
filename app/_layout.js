@@ -24,6 +24,18 @@ function StackLayout() {
         name="about"
         options={{ title: "About us", headerRight: () => <ThemeToggle /> }}
       />
+      <Stack.Screen
+        name="book"
+        options={{ title: "Book", headerRight: () => <ThemeToggle /> }}
+      />
+      <Stack.Screen
+        name="signin"
+        options={{ title: "signin", headerRight: () => <ThemeToggle /> }}
+      />
+      <Stack.Screen
+        name="signup"
+        options={{ title: "signup", headerRight: () => <ThemeToggle /> }}
+      />
     </Stack>
   );
 }
