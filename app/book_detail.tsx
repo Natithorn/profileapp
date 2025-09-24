@@ -2,14 +2,34 @@ import React from "react";
 import { useLocalSearchParams, router } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput, Alert, ScrollView, TouchableOpacity } from "react-native";
+import * as LocalAuthentication from "expo-local-authentication";
 
 const BookDetail = () => {
   const [book, setBook] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const { id } = useLocalSearchParams();
 
   useEffect(() => {
-    fetchBook();
+    const authenticate = async () => {
+      const hasHardware = await LocalAuthentication.hasHardwareAsync();
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+      if (hasHardware && isEnrolled) {
+        const result = await LocalAuthentication.authenticateAsync({
+          promptMessage: "โปรดยืนยันตัวตนเพื่อดูรายละเอียดหนังสือ",
+          fallbackLabel: "ป้อนรหัสผ่าน",
+        });
+        if (!result.success) {
+          Alert.alert("การยืนยันตัวตนล้มเหลว", "คุณไม่ได้รับอนุญาตให้เข้าถึงหน้านี้", [
+            { text: "ตกลง", onPress: () => router.back() },
+          ]);
+          return;
+        }
+      }
+      setAuthChecked(true);
+      fetchBook();
+    };
+    authenticate();
   }, [id]);
 
   const fetchBook = async () => {
@@ -72,6 +92,11 @@ const BookDetail = () => {
     );
   };
 
+  if (!authChecked) {
+    return (
+      <View style={styles.container}><Text>กำลังตรวจสอบตัวตน...</Text></View>
+    );
+  }
   if (!book) {
     return (
       <View style={styles.container}><Text>กำลังโหลดข้อมูล...</Text></View>

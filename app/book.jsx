@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
+import * as LocalAuthentication from "expo-local-authentication";
 import {
   View,
   Text,
@@ -13,6 +14,7 @@ import { Link } from "expo-router";
 const Book = () => {
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   const fetchBooks = () => {
     setRefreshing(true);
@@ -28,7 +30,22 @@ const Book = () => {
   };
 
   useEffect(() => {
-    fetchBooks();
+    const authenticate = async () => {
+      const hasHardware = await LocalAuthentication.hasHardwareAsync();
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+      if (hasHardware && isEnrolled) {
+        const result = await LocalAuthentication.authenticateAsync({
+          promptMessage: "โปรดยืนยันตัวตนเพื่อดูรายการหนังสือ",
+          fallbackLabel: "ป้อนรหัสผ่าน",
+        });
+        if (!result.success) {
+          return;
+        }
+      }
+      setAuthChecked(true);
+      fetchBooks();
+    };
+    authenticate();
   }, []);
 
   const renderItem = ({ item }) => (
@@ -45,6 +62,11 @@ const Book = () => {
     </TouchableOpacity>
   );
 
+  if (!authChecked) {
+    return (
+      <View style={styles.container}><Text>กำลังตรวจสอบตัวตน...</Text></View>
+    );
+  }
   return (
     <View style={styles.container}>
       <Link href={"/book_new"} style={styles.button}>
