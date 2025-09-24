@@ -1,47 +1,64 @@
-# แอพหนังสือ (Book App)
 
-แอพนี้เป็นตัวอย่างการพัฒนาแอปพลิเคชันมือถือด้วย React Native (Expo) ที่แสดงการทำงาน CRUD (Create, Read, Update, Delete) สำหรับข้อมูลหนังสือ พร้อมปรับปรุง UI ให้สวยงามและใช้งานง่าย
+# ProfileApp (Hybrid Mobile App)
+
+แอปนี้เป็นตัวอย่างการพัฒนาแอปมือถือด้วย React Native (Expo) สำหรับจัดการโปรไฟล์และข้อมูลหนังสือ
+ประกอบด้วยฟีเจอร์แสดงโปรไฟล์ส่วนตัว, รายการหนังสือ, เพิ่ม/แก้ไข/ลบหนังสือ, ระบบยืนยันตัวตน (Local Authentication) และธีมสี
 
 ## ฟีเจอร์หลัก
-- **แสดงรายการหนังสือทั้งหมด**
-- **ดูรายละเอียดหนังสือรายเล่ม**
-- **เพิ่มหนังสือใหม่**
-- **แก้ไขข้อมูลหนังสือ**
-- **ลบหนังสือ**
-- **UI ทันสมัย ใช้งานง่าย**
+
+- **หน้าโปรไฟล์ (Home)**
+   - แสดงข้อมูลส่วนตัว, สกิล, สถิติ, ภาพโปรไฟล์, ธีมสี
+   - ลิงก์ไปยังหน้าอื่น ๆ เช่น About, Book, Signin, Signup
+
+- **หน้า Book**
+   - แสดงรายการหนังสือทั้งหมด
+   - กดดูรายละเอียด, เพิ่ม, แก้ไข, ลบหนังสือ
+   - มีระบบยืนยันตัวตน (Local Authentication) ก่อนเข้าถึงข้อมูล
+
+- **หน้า Book Detail**
+   - แสดงรายละเอียดหนังสือแต่ละเล่ม
+   - แก้ไข/ลบหนังสือ
+   - ยืนยันตัวตนก่อนเข้าถึง
+
+- **หน้า Book New**
+   - เพิ่มหนังสือใหม่
+   - ยืนยันตัวตนก่อนเข้าถึง
+
+- **หน้า About, Signin, Signup**
+   - แสดงข้อมูลเกี่ยวกับผู้พัฒนา, ฟอร์มเข้าสู่ระบบ/สมัครสมาชิก
+
+- **Theme Toggle**
+   - เปลี่ยนธีมสี (Dark/Light Mode)
 
 ## โครงสร้างไฟล์ที่สำคัญ
-- `app/book.jsx` : หน้าแสดงรายการหนังสือทั้งหมด
-- `app/book_detail.tsx` : หน้าแสดงรายละเอียด/แก้ไข/ลบหนังสือ
-- `app/book_new.jsx` : หน้าเพิ่มหนังสือใหม่
+
+- `app/index.jsx` : หน้าโปรไฟล์หลัก
+- `app/book.jsx` : รายการหนังสือ
+- `app/book_detail.tsx` : รายละเอียด/แก้ไข/ลบหนังสือ
+- `app/book_new.jsx` : เพิ่มหนังสือใหม่
+- `app/about.jsx`, `app/signin.jsx`, `app/signup.jsx` : หน้าอื่น ๆ
+- `app/components/ThemeToggle.jsx` : ปุ่มเปลี่ยนธีม
+- `app/context/ThemeContext.js` : จัดการธีมสี
 
 ## เทคโนโลยีที่ใช้
+
 - React Native (Expo)
-- React Navigation (expo-router)
-- REST API (เชื่อมต่อ backend สำหรับข้อมูลหนังสือ)
+- Expo Router
+- Expo Local Authentication
+- REST API (Express.js backend)
+- Theme Context
 
-## วิธีใช้งาน
-1. ติดตั้ง dependencies ด้วยคำสั่ง
-   ```
-   npm install
-   ```
-2. รันแอพด้วย Expo
-   ```
-   npx expo start
-   ```
-3. ตรวจสอบให้ backend API (เช่น Express.js) ทำงานที่ URL ที่กำหนดในโค้ด (ตัวอย่าง: `http://10.0.15.34:3000/api/books`)
+## วิธีติดตั้งและใช้งาน
 
-
-## การเพิ่มฟังก์ชั่น Local Authentication (Biometric/Fingerprint/FaceID)
-
-แอพนี้รองรับการยืนยันตัวตนผู้ใช้ด้วยไบโอเมตริกซ์ (Local Authentication) ก่อนเข้าถึงข้อมูลสำคัญ เช่น รายการหนังสือ, เพิ่มหนังสือใหม่, ดูรายละเอียดหนังสือ
-
-### วิธีการติดตั้งและใช้งาน
-1. ติดตั้งแพ็กเกจ Local Authentication
+1. ติดตั้ง dependencies
+    ```
+    npm install
+    ```
+2. ติดตั้ง Local Authentication
     ```
     npx expo install expo-local-authentication
     ```
-2. เพิ่ม permission สำหรับ iOS ในไฟล์ `app.json`
+3. เพิ่ม permission สำหรับ iOS ใน `app.json`
     ```json
     "ios": {
        "infoPlist": {
@@ -49,36 +66,44 @@
        }
     }
     ```
-3. เพิ่มโค้ดในแต่ละหน้า เช่น
-    ```js
-    import * as LocalAuthentication from "expo-local-authentication";
-    // ...
-    useEffect(() => {
-       const authenticate = async () => {
-          const hasHardware = await LocalAuthentication.hasHardwareAsync();
-          const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-          if (hasHardware && isEnrolled) {
-             const result = await LocalAuthentication.authenticateAsync({
-                promptMessage: "โปรดยืนยันตัวตนเพื่อเข้าใช้งาน",
-                fallbackLabel: "ป้อนรหัสผ่าน",
-             });
-             if (!result.success) {
-                // ไม่อนุญาตให้เข้าถึง
-                return;
-             }
-          }
-          // อนุญาตให้เข้าถึงข้อมูล
-       };
-       authenticate();
-    }, []);
+4. รัน backend API ที่เครื่องคอมพิวเตอร์ (Express.js)
+5. รันแอปด้วย Expo
     ```
+    npx expo start
+    ```
+6. หากทดสอบบนมือถือจริง เปลี่ยน URL API จาก `localhost` เป็น IP ของเครื่องคอมพิวเตอร์ เช่น `http://10.0.15.34:3000/api/books`
 
-### จุดที่มีการยืนยันตัวตน
-- หน้าแสดงรายการหนังสือ (`book.jsx`)
-- หน้าเพิ่มหนังสือใหม่ (`book_new.jsx`)
-- หน้าแสดงรายละเอียดหนังสือ (`book_detail.tsx`)
+## การใช้งาน Local Authentication
 
-### หมายเหตุ
-- หากทดสอบบนมือถือจริง ต้องเปลี่ยน URL API จาก `localhost` เป็น IP ของเครื่องคอมพิวเตอร์
-- ฟีเจอร์นี้ช่วยเพิ่มความปลอดภัยให้กับข้อมูลในแอพ
+- มีการยืนยันตัวตนก่อนเข้าหน้า Book, Book Detail, Book New
+- ใช้ไบโอเมตริกซ์ (FaceID, Fingerprint) หรือ fallback เป็นรหัสผ่าน
+- เพิ่มโค้ดในแต่ละหน้า เช่น
+   ```js
+   import * as LocalAuthentication from "expo-local-authentication";
+   useEffect(() => {
+      const authenticate = async () => {
+         const hasHardware = await LocalAuthentication.hasHardwareAsync();
+         const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+         if (hasHardware && isEnrolled) {
+            const result = await LocalAuthentication.authenticateAsync({
+               promptMessage: "โปรดยืนยันตัวตนเพื่อเข้าใช้งาน",
+               fallbackLabel: "ป้อนรหัสผ่าน",
+            });
+            if (!result.success) {
+               // ไม่อนุญาตให้เข้าถึง
+               return;
+            }
+         }
+         // อนุญาตให้เข้าถึงข้อมูล
+      };
+      authenticate();
+   }, []);
+   ```
+
+## หมายเหตุ
+
+- หากต้องการเปลี่ยน URL API ให้แก้ไขในแต่ละไฟล์ที่มีการ fetch ข้อมูล
+- ฟีเจอร์ Local Authentication ช่วยเพิ่มความปลอดภัยให้กับข้อมูลในแอป
+- สามารถนำโค้ดนี้ไปต่อยอดหรือปรับปรุงเพิ่มเติมได้ตามต้องการ
+
 
